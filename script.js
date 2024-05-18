@@ -1,12 +1,14 @@
 // variables
-
 let workTittle = document.getElementById('study');
 let breakTittle = document.getElementById('break');
 
-let studyTime = 30;
-let breakTime = 10;
+let studyTime = 30; // minutes
+let breakTime = 10; // minutes
 
-let seconds = "00"
+let seconds = "00";
+let timerInterval;
+let isBreak = false;
+let currentMinutes = studyTime;
 
 // display
 window.onload = () => {
@@ -14,7 +16,7 @@ window.onload = () => {
     document.getElementById('seconds').innerHTML = seconds;
 
     workTittle.classList.add('active');
-}
+};
 
 // start timer
 function start() {
@@ -22,48 +24,57 @@ function start() {
     document.getElementById('start').style.display = "none";
     document.getElementById('reset').style.display = "block";
 
-    // change the time
     seconds = 59;
+    currentMinutes = studyTime - 1;
 
-    let studyMinutes = studyTime - 1;
-    let breakMinutes = breakTime - 1;
-
-    breakCount = 0;
-
-    // countdown
+    // countdown function
     let timerFunction = () => {
-        //change the display
-        document.getElementById('minutes').innerHTML = studyMinutes;
-        document.getElementById('seconds').innerHTML = seconds;
+        // update display
+        document.getElementById('minutes').innerHTML = currentMinutes;
+        document.getElementById('seconds').innerHTML = seconds < 10 ? "0" + seconds : seconds;
 
-        // start
-        seconds = seconds - 1;
-
-        if(seconds === 0) {
-            workMinutes = workMinutes - 1;
-            if(workMinutes === -1 ){
-                if(breakCount % 2 === 0) {
+        if (seconds == 0) {
+            if (currentMinutes == 0) {
+                if (!isBreak) {
                     // start break
-                    workMinutes = breakMinutes;
-                    breakCount++
-
-                    // change the tab
+                    currentMinutes = breakTime;
                     workTittle.classList.remove('active');
                     breakTittle.classList.add('active');
-                }else {
+                } else {
                     // continue study
-                    studyMinutes = studyTime;
-                    breakCount++
-
-                    // change the tab
+                    currentMinutes = studyTime;
                     breakTittle.classList.remove('active');
                     workTittle.classList.add('active');
                 }
+                isBreak = !isBreak;
+            } else {
+                currentMinutes--;
             }
             seconds = 59;
+        } else {
+            seconds--;
         }
-    }
+    };
 
     // start countdown
-    setInterval(timerFunction, 1000); // 1000 = 1s
+    timerInterval = setInterval(timerFunction, 1000); // 1000 = 1s
+}
+
+// reset timer
+function reset() {
+    clearInterval(timerInterval);
+    document.getElementById('start').style.display = "block";
+    document.getElementById('reset').style.display = "none";
+
+    // reset variables
+    seconds = "00";
+    currentMinutes = studyTime;
+    isBreak = false;
+
+    // reset display
+    document.getElementById('minutes').innerHTML = studyTime;
+    document.getElementById('seconds').innerHTML = seconds;
+
+    workTittle.classList.add('active');
+    breakTittle.classList.remove('active');
 }
