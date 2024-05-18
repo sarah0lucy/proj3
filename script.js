@@ -60,21 +60,4 @@ function start() {
     timerInterval = setInterval(timerFunction, 1000); // 1000 = 1s
 }
 
-// reset timer
-function reset() {
-    clearInterval(timerInterval);
-    document.getElementById('start').style.display = "block";
-    document.getElementById('reset').style.display = "none";
 
-    // reset variables
-    seconds = "00";
-    currentMinutes = studyTime;
-    isBreak = false;
-
-    // reset display
-    document.getElementById('minutes').innerHTML = studyTime;
-    document.getElementById('seconds').innerHTML = seconds;
-
-    workTittle.classList.add('active');
-    breakTittle.classList.remove('active');
-}
